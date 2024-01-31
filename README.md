@@ -62,8 +62,27 @@ It will show tasks that you can run with Nx.
 
 - [Learn more about Exploring the Project Graph](https://nx.dev/core-features/explore-graph)
 
-## Connect with us!
 
-- [Join the community](https://nx.dev/community)
-- [Subscribe to the Nx Youtube Channel](https://www.youtube.com/@nxdevtools)
-- [Follow us on Twitter](https://twitter.com/nxdevtools)
+# Useful commands
+
+
+To start a project
+```
+nx serve frontend
+```
+
+Generate a vue app called frontend
+```
+npx g @nx/vue:app frontend
+```
+
+
+Start multiple projects
+```
+nx run-many -t serve -p frontend backend
+```
+
+
+
+API:
+ http://localhost:3000/api
