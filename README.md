@@ -83,6 +83,10 @@ nx run-many -t serve -p frontend backend
 ```
 
 
+Build docker container
+```
+nx docker-build backend 
+```
 
 API:
  http://localhost:3000/api

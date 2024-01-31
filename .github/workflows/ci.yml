@@ -6,7 +6,24 @@ on:
   pull_request:
 
 jobs:
-  main:
+  test:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Hello GitHub Actions!"
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install PNPM
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm nx run-many -t build -p frontend backend
+
+      - name: Test all
+        run: pnpm nx run-many -t test -p frontend backend

@@ -7,7 +7,6 @@ window.axios = axios;
 const count = ref(0)
 
   function doSomething() {
-    count++;
     axios
       .get('http://localhost:4200/api')
       .then((response) => {
@@ -19,5 +18,5 @@ const count = ref(0)
 </script>
 
 <template>
-  <button @click="doSomething()">You clicked me {{ count }} times.</button>
+  <button @click="doSomething(); count++">You clicked me {{ count }} times.</button>
 </template>
