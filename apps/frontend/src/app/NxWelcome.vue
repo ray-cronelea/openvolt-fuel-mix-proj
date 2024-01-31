@@ -1,7 +1,12 @@
 <script setup lang="ts">
+import ButtonCounter from './ButtonCounter.vue'
+import MyFirstComponent from './MyFirstComponent.vue'
+import { myLib } from '@new-workspace/my-lib';
 defineProps<{
   title: string;
 }>();
+const message = myLib()
+
 </script>
 
 <template>
@@ -11,6 +16,9 @@ defineProps<{
         <h1>
           <span> Hello there, </span>
           Welcome {{ title }} 👋
+          Custom message: {{ message }} 👋
+          <ButtonCounter />
+          <MyFirstComponent />
         </h1>
       </div>
 

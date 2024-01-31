@@ -5,3 +5,4 @@ import NxWelcome from './NxWelcome.vue';
 <template>
   <NxWelcome title="frontend" />
 </template>
+
