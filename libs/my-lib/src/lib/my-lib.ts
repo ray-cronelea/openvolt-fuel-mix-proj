@@ -1,3 +1,3 @@
 export function myLib(): string {
-  return 'my-lib updated value';
+  return 'A great value to start with for testing!';
 }

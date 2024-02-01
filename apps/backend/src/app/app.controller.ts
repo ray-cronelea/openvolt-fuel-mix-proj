@@ -10,4 +10,10 @@ export class AppController {
   getData() {
     return this.appService.getData();
   }
+
+  @Get('energy-consumed')
+  getEnergyConsumed() {
+    return this.appService.getEnergyConsumed();
+  }
+
 }

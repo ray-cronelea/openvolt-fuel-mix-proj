@@ -2,6 +2,9 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 export default defineConfig({
   root: __dirname,
@@ -17,7 +20,16 @@ export default defineConfig({
     host: 'localhost',
   },
 
-  plugins: [vue(), nxViteTsPaths()],
+  plugins: [
+    vue(), 
+    nxViteTsPaths(),
+    AutoImport({
+      resolvers: [ElementPlusResolver()],
+    }),
+    Components({
+      resolvers: [ElementPlusResolver()],
+    })
+  ],
 
   // Uncomment this if you are using workers.
   // worker: {
