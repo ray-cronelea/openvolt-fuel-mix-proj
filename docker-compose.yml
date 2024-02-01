@@ -1,0 +1,41 @@
+version: '3.3'
+services:
+
+    reverse-proxy:
+        # The official v2 Traefik docker image
+        image: traefik:v2.10
+        # Enables the web UI and tells Traefik to listen to docker
+        command: --api.insecure=true --providers.docker
+        ports:
+            # The HTTP port
+            - "80:80"
+            # The Web UI (enabled by --api.insecure=true)
+            - "8181:8080"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        restart: unless-stopped
+
+
+    frontend:
+        image: 10.1.1.101:5000/frontend:latest
+        platform: linux/amd64
+        container_name: frontend
+        ports:
+            - '4200:8080'
+        restart: unless-stopped
+        labels:
+        - "traefik.http.routers.frontend.rule=Host(`carbonmix.raywilson.ie`)"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+
+    backend:
+        image: 10.1.1.101:5000/backend:latest
+        container_name: backend
+        platform: linux/amd64
+        ports:
+            - '3000:3000'
+        restart: unless-stopped
+        labels:
+        - "traefik.http.routers.backend.rule=Host(`carbonmix.raywilson.ie`) && Path(`/api`)"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock

@@ -18,8 +18,12 @@
         "webpackConfig": "apps/backend/webpack.config.js"
       },
       "configurations": {
-        "development": {},
-        "production": {}
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production"
+        }
       }
     },
     "serve": {
@@ -49,7 +53,7 @@
     },
     "docker-build": {
       "dependsOn": ["build"],
-      "command": "docker build -f apps/backend/Dockerfile . -t backend",
+      "command": "docker buildx build --platform linux/amd64,linux/arm64 -f apps/backend/Dockerfile . -t 10.1.1.101:5000/backend:latest --push --output=type=registry,registry.insecure=true",
       "configurations": {
         "development": {
           "buildTarget": "backend:build:development"

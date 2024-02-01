@@ -73,7 +73,7 @@
     },
     "docker-build": {
       "dependsOn": ["clean"],
-      "command": "docker build -f apps/frontend/Dockerfile . -t frontend",
+      "command": "docker buildx build --platform linux/amd64 -f apps/frontend/Dockerfile . -t 10.1.1.101:5000/frontend:latest --push --output=type=registry,registry.insecure=true",
       "configurations": {
         "development": {
           "buildTarget": "frontend:build:development"
