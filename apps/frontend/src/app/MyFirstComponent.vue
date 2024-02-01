@@ -8,7 +8,7 @@ const count = ref(0)
 
   function doSomething() {
     axios
-      .get('http://localhost:4200/api')
+      .get('/api')
       .then((response) => {
         console.log(response.data)
       })

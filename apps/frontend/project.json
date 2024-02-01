@@ -25,6 +25,7 @@
       }
     },
     "serve": {
+      "dependsOn": ["build"],
       "executor": "@nx/vite:dev-server",
       "defaultConfiguration": "development",
       "options": {
@@ -68,6 +69,18 @@
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "frontend:build"
+      }
+    },
+    "docker-build": {
+      "dependsOn": ["clean"],
+      "command": "docker build -f apps/frontend/Dockerfile . -t frontend",
+      "configurations": {
+        "development": {
+          "buildTarget": "frontend:build:development"
+        },
+        "production": {
+          "buildTarget": "frontend:build:production"
+        }
       }
     }
   }

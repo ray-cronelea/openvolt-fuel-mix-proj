@@ -49,7 +49,15 @@
     },
     "docker-build": {
       "dependsOn": ["build"],
-      "command": "docker build -f apps/backend/Dockerfile . -t backend"
+      "command": "docker build -f apps/backend/Dockerfile . -t backend",
+      "configurations": {
+        "development": {
+          "buildTarget": "backend:build:development"
+        },
+        "production": {
+          "buildTarget": "backend:build:production"
+        }
+      }
     }
   },
   "tags": []
