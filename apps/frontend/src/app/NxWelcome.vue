@@ -9,7 +9,7 @@ defineProps<{
   title: string;
 }>();
 
-const selectedMonth = ref(new Date('2023-01'));
+const selectedMonth = ref('2023-01');
 </script>
 
 <template>

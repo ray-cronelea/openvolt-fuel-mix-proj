@@ -18,8 +18,8 @@ export class AppController {
   }
 
   @Get('carbon-emitted')
-  getCarbonEmitted() {
-    return this.appService.getCarbonEmitted();
+  getCarbonEmitted(@Query('reqDate') reqDate: string) {
+    return this.appService.getCarbonEmitted(reqDate);
   }
 
 }

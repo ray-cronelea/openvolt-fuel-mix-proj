@@ -42,5 +42,6 @@ To add dockerfile to project `nx g setup-docker`
 
 
 ## NEXT STEPS
-Add date to rest request and check that value is received in backend
-Add backend request to openvolt api for the selected date
+Move business logic to separate layer?
+Add cache for allready requested values
+Add functionality for parsing of both APIs and see how it looks.

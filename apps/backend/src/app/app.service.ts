@@ -3,14 +3,24 @@ import { myLib } from '@new-workspace/my-lib';
 import moment from 'moment';
 import axios from 'axios';
 
+type MeterData = {
+  start_interval: Date;
+  meter_id: string;
+  meter_number: string;
+  customer_id: string;
+  consumption: number;
+  consumption_units: string;
+};
+
 @Injectable()
 export class AppService {
   getData(): { message: string } {
     return { message: myLib() };
   }
 
-  async getEnergyConsumed(monthVal: string): Promise<{ energyConsumed: number }> {
-
+  async getEnergyConsumed(
+    monthVal: string
+  ): Promise<{ energyConsumed: number }> {
     const start = moment(monthVal);
     const end = start.add(1, 'month');
 
@@ -25,8 +35,11 @@ export class AppService {
     const params = {
       meter_id: '6514167223e3d1424bf82742',
       granularity: 'month',
-      start_date: moment(monthVal).format("YYYY-MM"),
-      end_date: moment(monthVal).add(1, 'month').format("YYYY-MM"),
+      start_date: moment(monthVal).toISOString(),
+      end_date: moment(monthVal)
+        .add(1, 'month')
+        .subtract(1, 'second')
+        .toISOString(),
     };
 
     const headers = {
@@ -45,7 +58,7 @@ export class AppService {
       });
   }
 
-  getCarbonEmitted(): { carbonEmitted: number } {
+  getCarbonEmitted(monthVal: string): { carbonEmitted: number } {
     return { carbonEmitted: 567.89 };
   }
 }
