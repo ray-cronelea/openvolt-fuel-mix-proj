@@ -1,19 +1,15 @@
 <script setup lang="ts">
 import EnergyConsumed from './EnergyConsumed.vue';
+import CarbonEmitted from './CarbonEmitted.vue';
 import { myLib } from '@new-workspace/my-lib';
-import { useTransition } from '@vueuse/core';
 import { ChatLineRound, Lightning } from '@element-plus/icons-vue';
 import { ref } from 'vue';
 
 defineProps<{
   title: string;
 }>();
-const message = myLib();
-const source = ref(0);
-const outputValue = useTransition(source, {
-  duration: 1500,
-});
-source.value = 172000;
+
+const selectedMonth = ref(new Date('2023-01'));
 </script>
 
 <template>
@@ -21,50 +17,25 @@ source.value = 172000;
     <div class="container">
       <div id="commands" class="rounded shadow">
         <el-row>
-          <el-col :span="6">
-            <el-statistic :value="138">
-              <template #title>
-                <div style="display: inline-flex; align-items: center">
-                  Energy Consumed
-                  <el-icon style="margin-left: 4px" :size="12">
-                    <Lightning />
-                  </el-icon>
-                </div>
-              </template>
-              <template #suffix>kWh</template>
-            </el-statistic>
+          <el-col>
+            <div class="block" justify="center">
+              <el-date-picker
+                v-model="selectedMonth"
+                type="month"
+                placeholder="Pick a month"
+              />
+            </div>
           </el-col>
-          <el-col :span="6">
-            <el-statistic :value="138">
-              <template #title>
-                <div style="display: inline-flex; align-items: center">
-                  CO2 Emitted
-                  <el-icon style="margin-left: 4px" :size="12">
-                    <Lightning />
-                  </el-icon>
-                </div>
-              </template>
-              <template #suffix>Kg</template>
-            </el-statistic>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <EnergyConsumed :reqDate=selectedMonth> </EnergyConsumed>
           </el-col>
-          <el-col :span="6">
-            <el-statistic title="Total Transactions" :value="outputValue" />
-          </el-col>
-          <el-col :span="6">
-            <el-statistic title="Feedback number" :value="562">
-              <template #suffix>
-                <el-icon style="vertical-align: -0.125em">
-                  <ChatLineRound />
-                </el-icon>
-              </template>
-            </el-statistic>
+          <el-col :span="12">
+            <CarbonEmitted />
           </el-col>
         </el-row>
       </div>
-    </div>
-
-    <div class="container">
-      <EnergyConsumed />
     </div>
   </div>
 </template>
@@ -76,6 +47,9 @@ source.value = 172000;
 }
 .el-col {
   text-align: center;
+}
+.el-row {
+  margin-bottom: 2rem;
 }
 .shadow {
   box-shadow: 0 0 #0000, 0 0 #0000, 0 10px 15px -3px rgba(0, 0, 0, 0.1),

@@ -8,13 +8,13 @@
       <div v-if="loading">Loading...</div>
 
       <div v-else>
-        <el-statistic :value="energy_consumed_content.energyConsumed">
+        <el-statistic :value=carbon_emitted_content.carbonEmitted>
           <template #title>
             <div style="display: inline-flex; align-items: center">
-              Energy Consumed
+              Carbon Emitted
             </div>
           </template>
-          <template #suffix>kWh</template>
+          <template #suffix>Kg</template>
         </el-statistic>
       </div>
     </section>
@@ -27,33 +27,20 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      energy_consumed_content: null,
+      carbon_emitted_content: null,
       loading: true,
       errored: false,
     };
   },
-  props: {
-    reqDate: {
-      default: new Date("2023-01")
-    }
-  },
-  watch: {
-    reqDate: function (newReqDate) {
-      this.getOrder(newReqDate)
-    },
-  },
   created() {
-    this.getOrder(this.reqDate);
+    this.getOrder();
   },
   methods: {
-    getOrder(reqDate) {
-      console.log("reqDate val: " + reqDate)
-      this.loading = true;
-      this.errored = false;
+    getOrder(id) {
       axios
-        .get('api/energy-consumed')
+        .get('api/carbon-emitted')
         .then((response) => {
-          this.energy_consumed_content = response.data;
+          this.carbon_emitted_content = response.data;
         })
         .catch((error) => {
           console.log(error);

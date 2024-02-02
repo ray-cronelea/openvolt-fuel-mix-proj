@@ -11,4 +11,8 @@ export class AppService {
   getEnergyConsumed():{ energyConsumed: number} {
     return ({ energyConsumed: 123.456});
   }
+
+  getCarbonEmitted():{ carbonEmitted: number} {
+    return ({ carbonEmitted: 567.890});
+  }
 }

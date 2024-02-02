@@ -37,3 +37,10 @@ It will show tasks that you can run with Nx.
 Generate a vue app called frontend `npx g @nx/vue:app frontend`
 
 To add dockerfile to project `nx g setup-docker`
+
+
+
+
+## NEXT STEPS
+Continue to put basic front end in place to receive energy consumed
+Add backend request to openvolt api

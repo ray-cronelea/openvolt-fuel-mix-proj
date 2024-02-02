@@ -16,4 +16,9 @@ export class AppController {
     return this.appService.getEnergyConsumed();
   }
 
+  @Get('carbon-emitted')
+  getCarbonEmitted() {
+    return this.appService.getCarbonEmitted();
+  }
+
 }
