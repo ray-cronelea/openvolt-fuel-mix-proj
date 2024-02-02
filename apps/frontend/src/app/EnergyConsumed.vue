@@ -8,7 +8,7 @@
       <div v-if="loading">Loading...</div>
 
       <div v-else>
-        <el-statistic :value="energy_consumed_content.energyConsumed">
+        <el-statistic :value=energy_consumed_content.energyConsumed>
           <template #title>
             <div style="display: inline-flex; align-items: center">
               Energy Consumed
@@ -34,24 +34,29 @@ export default {
   },
   props: {
     reqDate: {
-      default: new Date("2023-01")
-    }
+      default: '2023-01',
+    },
   },
   watch: {
     reqDate: function (newReqDate) {
-      this.getOrder(newReqDate)
+      this.getOrder(newReqDate);
     },
   },
   created() {
     this.getOrder(this.reqDate);
   },
   methods: {
-    getOrder(reqDate) {
-      console.log("reqDate val: " + reqDate)
+    getOrder(reqDateIn) {
+      
       this.loading = true;
       this.errored = false;
+
+      const params = {
+        reqDate: reqDateIn ,
+      };
+
       axios
-        .get('api/energy-consumed')
+        .get('api/energy-consumed', { params })
         .then((response) => {
           this.energy_consumed_content = response.data;
         })

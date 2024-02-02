@@ -42,5 +42,5 @@ To add dockerfile to project `nx g setup-docker`
 
 
 ## NEXT STEPS
-Continue to put basic front end in place to receive energy consumed
-Add backend request to openvolt api
+Add date to rest request and check that value is received in backend
+Add backend request to openvolt api for the selected date

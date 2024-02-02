@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 
 import { AppService } from './app.service';
 
@@ -12,8 +12,9 @@ export class AppController {
   }
 
   @Get('energy-consumed')
-  getEnergyConsumed() {
-    return this.appService.getEnergyConsumed();
+  getEnergyConsumed(@Query('reqDate') reqDate: string) :  Promise<{ energyConsumed: number }> {
+    console.log("Querying for date: " + reqDate)
+    return this.appService.getEnergyConsumed(reqDate);
   }
 
   @Get('carbon-emitted')
