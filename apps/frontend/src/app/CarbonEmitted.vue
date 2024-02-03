@@ -29,18 +29,18 @@ export default {
     return {
       carbon_emitted_content: null,
       loading: true,
-      errored: false,
+      errored: false
     };
   },
   props: {
     reqDate: {
-      default: '2023-01-01T00:00:00.000Z',
-    },
+      default: '2023-01-01T00:00:00.000Z'
+    }
   },
   watch: {
-    reqDate: function (newReqDate) {
+    reqDate: function(newReqDate) {
       this.getOrder(newReqDate);
-    },
+    }
   },
   created() {
     this.getOrder(this.reqDate);
@@ -51,7 +51,7 @@ export default {
       this.errored = false;
 
       const params = {
-        reqDate: reqDateIn,
+        reqDate: reqDateIn
       };
 
       axios
@@ -65,8 +65,8 @@ export default {
           this.errored = true;
         })
         .finally(() => (this.loading = false));
-    },
-  },
+    }
+  }
 };
 </script>
 

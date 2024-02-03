@@ -1,8 +1,8 @@
-<script setup lang="ts">
-import NxWelcome from './NxWelcome.vue';
+<script lang="ts" setup>
+import EnergyImpactReport from './EnergyImpactReport.vue';
 </script>
 
 <template>
-  <NxWelcome title="frontend" />
+  <EnergyImpactReport title="Energy Impact Report" />
 </template>
 
