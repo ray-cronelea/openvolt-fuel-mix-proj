@@ -1,25 +1,24 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Logger, Query } from '@nestjs/common';
 
 import { AppService } from './app.service';
+import { CarbonEmitted, EnergyConsumed } from './DomainObjects';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService) {
+  }
 
-  @Get()
-  getData() {
+  @Get() getData() {
     return this.appService.getData();
   }
 
-  @Get('energy-consumed')
-  getEnergyConsumed(@Query('reqDate') reqDate: string) :  Promise<{ energyConsumed: number }> {
-    console.log("Querying energy-consumed for date: " + reqDate)
+  @Get('energy-consumed') getEnergyConsumed(@Query('reqDate') reqDate: Date): Promise<EnergyConsumed> {
+    Logger.log('GET energy-consumed with reqDate: ' + reqDate);
     return this.appService.getEnergyConsumed(reqDate);
   }
 
-  @Get('carbon-emitted')
-  getCarbonEmitted(@Query('reqDate') reqDate: string) {
-    console.log("Querying carbon-emitted for date: " + reqDate)
+  @Get('carbon-emitted') getCarbonEmitted(@Query('reqDate') reqDate: Date): Promise<CarbonEmitted> {
+    Logger.log('GET carbon-emitted with reqDate: ' + reqDate);
     return this.appService.getCarbonEmitted(reqDate);
   }
 
