@@ -1,26 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { myLib } from '@new-workspace/my-lib';
 
-import { CarbonEmitted, EnergyConsumed } from './DomainObjects';
+import { CarbonEmitted, EnergyConsumed, Intensity, IntensityWrapper, IntervalData, MeterData } from './DomainObjects';
 
 import moment from 'moment';
-import axios from 'axios';
-
-type IntervalData = {
-  startInterval: Date,
-  endInterval: Date,
-  granularity: string,
-  data: Array<MeterData>
-}
-
-type MeterData = {
-  start_interval: Date;
-  meter_id: string;
-  meter_number: string;
-  customer_id: string;
-  consumption: number;
-  consumption_units: string;
-};
+import { getHalfHourIntervalData, getMonthIntervalData } from './IntervalDataService';
+import { getHalfHourCarbonIntensityWrapper } from './CarbonIntensityService';
 
 const carbonEmitByDateCache: Map<Date, number> = new Map();
 const energyConsumedByDateCache: Map<Date, number> = new Map();
@@ -38,16 +23,16 @@ export class AppService {
       return Promise.resolve({ energyConsumed: cachedValue });
     } else {
 
-      let promise = this.getMonthlyIntervalData({ monthVal })
+      let promise = getMonthIntervalData(monthVal)
         .then((intervalData: IntervalData) => intervalData.data);
 
       return promise
-        .then((meterData : Array<MeterData>) => meterData[0])
+        .then((meterData: Array<MeterData>) => meterData[0])
         .then((meterDatum: MeterData) => meterDatum.consumption)
         .then(energyConsumption => {
-          energyConsumedByDateCache.set(monthVal, energyConsumption)
-          return { energyConsumed: energyConsumption }
-        })
+          energyConsumedByDateCache.set(monthVal, energyConsumption);
+          return { energyConsumed: energyConsumption };
+        });
     }
   }
 
@@ -60,10 +45,10 @@ export class AppService {
       Logger.log(
         `Value not in cache for ${monthVal}, performing requests and calculating data'`
       );
-      let meterDatas = await this.getHalfHourIntervalData(monthVal)
+      let meterData = await getHalfHourIntervalData(monthVal)
         .then((json: IntervalData) => json.data);
 
-      var carbonDataPromises: Array<Promise<number>> = createCarbonDataPromises(meterDatas);
+      const carbonDataPromises: Array<Promise<number>> = createCarbonDataPromises(meterData);
       let carbonEmitGrams = (await Promise.all(carbonDataPromises))
         .reduce((sum, current) => sum + current, 0);
 
@@ -73,69 +58,39 @@ export class AppService {
       };
     }
   }
-
-  async getMonthlyIntervalData({ monthVal }: { monthVal: Date; }) : Promise<IntervalData> {
-    const params = {
-      meter_id: '6514167223e3d1424bf82742',
-      granularity: 'month',
-      start_date: moment(monthVal).toISOString(),
-      end_date: moment(monthVal)
-        .add(1, 'month')
-        .subtract(1, 'second')
-        .toISOString()
-    };
-
-    const headers = {
-      accept: 'application/json',
-      'x-api-key': 'test-Z9EB05N-07FMA5B-PYFEE46-X4ECYAR'
-    };
-
-    return await axios
-      .get('https://api.openvolt.com/v1/interval-data', { params, headers })
-      .then(res => res.data)
-  }
-
-  private async getHalfHourIntervalData(monthVal: Date): Promise<IntervalData> {
-    const params = {
-      meter_id: '6514167223e3d1424bf82742',
-      granularity: 'hh',
-      start_date: moment(monthVal).toISOString(),
-      end_date: moment(monthVal)
-        .add(1, 'month')
-        .subtract(1, 'second')
-        .toISOString()
-    };
-
-    const headers = {
-      accept: 'application/json',
-      'x-api-key': 'test-Z9EB05N-07FMA5B-PYFEE46-X4ECYAR'
-    };
-
-    return await axios
-      .get('https://api.openvolt.com/v1/interval-data', { params, headers })
-      .then(res => res.data);
-  }
 }
 
-function createCarbonDataPromises(meterDatas: Array<MeterData>): Promise<number>[] {
-  const headers = {
-    Accept: 'application/json'
-  };
+function createCarbonDataPromises(meterData: Array<MeterData>): Promise<number>[] {
 
-  const promises: Array<Promise<number>> = [];
-  for (const meterData of meterDatas) {
-    const consumption_kwh = meterData.consumption;
-    const time = meterData.start_interval;
+  const carbonDataPromises: Array<Promise<number>> = [];
 
-    promises.push(
-      axios
-        .get(`https://api.carbonintensity.org.uk/intensity/${time}`, { headers })
-        .then(res => res.data)
-        .then(json => json.data[0].intensity)
-        .then(intensity => intensity.actual)
-        .then(actualIntensity => actualIntensity * consumption_kwh)
+  for (const meterDatum of meterData) {
+    carbonDataPromises.push(
+      getHalfHourCarbonIntensityWrapper(moment(meterDatum.start_interval).add(30, 'minutes').toDate())
+        .then(intensityWrapper => validateDatesMatch(meterDatum, intensityWrapper))
+        .then((intensityWrapper: IntensityWrapper) => intensityWrapper.intensity)
+        .then((intensity: Intensity) => intensity.actual)
+        .then(actualIntensity => calculateCarbonDioxideGramsProduced(actualIntensity, meterDatum.consumption))
     );
   }
 
-  return promises;
+  return carbonDataPromises;
+}
+
+function calculateCarbonDioxideGramsProduced(gramCarbonDioxidePerKilowattHour: number, kilowattHours: number) {
+  return gramCarbonDioxidePerKilowattHour * kilowattHours;
+}
+
+function dateTimeMatches(date1: Date, date2: Date) {
+  return new Date(date1).toISOString() === new Date(date2).toISOString();
+}
+
+function validateDatesMatch(meterData: MeterData, intensityWrapper: IntensityWrapper): Promise<IntensityWrapper> {
+  return new Promise((resolve, reject) => {
+    if (dateTimeMatches(meterData.start_interval, intensityWrapper.from)) {
+      resolve(intensityWrapper);
+    } else {
+      reject(`There was a mismatch between meter data start interval ${intensityWrapper.from} and intensity wrapper from ${meterData.start_interval}`);
+    }
+  });
 }
