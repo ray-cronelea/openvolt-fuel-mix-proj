@@ -58,7 +58,72 @@ export class AppService {
       });
   }
 
-  getCarbonEmitted(monthVal: string): { carbonEmitted: number } {
-    return { carbonEmitted: 567.89 };
+  async getCarbonEmitted(monthVal: string): Promise<{ carbonEmit: number }> {
+    const start = moment(monthVal);
+    const end = start.add(1, 'month');
+
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        'x-api-key': 'test-Z9EB05N-07FMA5B-PYFEE46-X4ECYAR',
+      },
+    };
+
+    const params = {
+      meter_id: '6514167223e3d1424bf82742',
+      granularity: 'hh',
+      start_date: moment(monthVal).toISOString(),
+      end_date: moment(monthVal)
+        .add(1, 'month')
+        .subtract(1, 'second')
+        .toISOString(),
+    };
+
+    const headers = {
+      accept: 'application/json',
+      'x-api-key': 'test-Z9EB05N-07FMA5B-PYFEE46-X4ECYAR',
+    };
+
+    var promise1: Promise<Array<MeterData>> = axios
+      .get('https://api.openvolt.com/v1/interval-data', { params, headers })
+      .then((res) => res.data.data);
+
+    return promise1.then((meterDatas) => {
+      var carbonDataPromises: Array<Promise<number>> =
+        getCarbonDataPromises(meterDatas);
+
+      return Promise.all(carbonDataPromises).then((values: Array<number>) => {
+        return { carbonEmit: values.reduce((sum, current) => sum + current, 0) };
+      });
+    });
   }
+}
+
+function getCarbonDataPromises(meterDatas: Array<MeterData>): Promise<number>[] {
+
+  const headers = {
+    Accept: 'application/json',
+  };
+
+  var promises : Array<Promise<number>> = []
+
+  for (var meterData of meterDatas) {
+    var consumption_kwh = meterData.consumption;
+    var time = meterData.start_interval;
+    
+
+
+    var numprom : Promise<number>  = axios
+    .get('https://api.carbonintensity.org.uk/intensity/' + time, { headers })
+    .then(res => res.data)
+    .then(json => json.data[0].intensity)
+    .then(intensity => intensity.actual)
+    .then(actualIntensity => actualIntensity * consumption_kwh);
+
+    promises.push(numprom);
+
+  }
+
+  return promises;
 }
