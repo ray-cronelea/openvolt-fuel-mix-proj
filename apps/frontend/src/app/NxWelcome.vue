@@ -9,7 +9,7 @@ defineProps<{
   title: string;
 }>();
 
-const selectedMonth = ref('2023-01');
+const selectedMonth = ref('2023-01-01T00:00:00.000Z');
 </script>
 
 <template>
@@ -23,6 +23,7 @@ const selectedMonth = ref('2023-01');
                 v-model="selectedMonth"
                 type="month"
                 placeholder="Pick a month"
+                :clearable= false
               />
             </div>
           </el-col>
@@ -32,7 +33,7 @@ const selectedMonth = ref('2023-01');
             <EnergyConsumed :reqDate=selectedMonth> </EnergyConsumed>
           </el-col>
           <el-col :span="12">
-            <CarbonEmitted />
+            <CarbonEmitted :reqDate=selectedMonth> </CarbonEmitted>
           </el-col>
         </el-row>
       </div>
@@ -40,7 +41,7 @@ const selectedMonth = ref('2023-01');
   </div>
 </template>
 
-<style scoped>
+<style>
 #commands {
   padding: 2.5rem 2rem;
   margin-top: 3.5rem;
@@ -50,6 +51,9 @@ const selectedMonth = ref('2023-01');
 }
 .el-row {
   margin-bottom: 2rem;
+}
+.el-input__inner {
+  text-align: center
 }
 .shadow {
   box-shadow: 0 0 #0000, 0 0 #0000, 0 10px 15px -3px rgba(0, 0, 0, 0.1),

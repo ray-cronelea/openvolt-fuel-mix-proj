@@ -8,13 +8,13 @@
       <div v-if="loading">Loading...</div>
 
       <div v-else>
-        <el-statistic :value=carbon_emitted_content.carbonEmitted>
+        <el-statistic :value="carbon_emitted_content.carbonEmit">
           <template #title>
             <div style="display: inline-flex; align-items: center">
               Carbon Emitted
             </div>
           </template>
-          <template #suffix>Kg</template>
+          <template #suffix>gCO2</template>
         </el-statistic>
       </div>
     </section>
@@ -32,14 +32,32 @@ export default {
       errored: false,
     };
   },
+  props: {
+    reqDate: {
+      default: '2023-01-01T00:00:00.000Z',
+    },
+  },
+  watch: {
+    reqDate: function (newReqDate) {
+      this.getOrder(newReqDate);
+    },
+  },
   created() {
-    this.getOrder();
+    this.getOrder(this.reqDate);
   },
   methods: {
-    getOrder(id) {
+    getOrder(reqDateIn) {
+      this.loading = true;
+      this.errored = false;
+
+      const params = {
+        reqDate: reqDateIn,
+      };
+
       axios
-        .get('api/carbon-emitted')
+        .get('api/carbon-emitted', { params })
         .then((response) => {
+          console.log(response.data);
           this.carbon_emitted_content = response.data;
         })
         .catch((error) => {
