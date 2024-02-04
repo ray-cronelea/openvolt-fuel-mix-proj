@@ -25,13 +25,11 @@ export class EnergyConsumedService {
       return Promise.resolve({ energyConsumed: cachedValue });
     } else {
 
-      let promise = this.intervalDataService.getMonthIntervalData(monthVal)
-        .then((intervalData: IntervalData) => intervalData.data);
-
-      return promise
+      return this.intervalDataService.getMonthIntervalData(monthVal)
+        .then((intervalData: IntervalData) => intervalData.data)
         .then((meterData: Array<MeterData>) => meterData[0])
         .then((meterDatum: MeterData) => meterDatum.consumption)
-        .then(energyConsumption => {
+        .then((energyConsumption: number) => {
           energyConsumedByDateCache.set(monthVal, energyConsumption);
           return { energyConsumed: energyConsumption };
         });
