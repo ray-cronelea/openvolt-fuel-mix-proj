@@ -17,7 +17,7 @@ export class CarbonIntensityService {
       .get(`https://api.carbonintensity.org.uk/intensity/${time.toISOString()}`, { headers })
       .then(res => res.data)
       .then(json => json.data)
-      .then(intensities => intensities[0]);
+      .then((intensities: Array<IntensityWrapper>) => intensities[0]);
   }
 
 
