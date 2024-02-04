@@ -25,6 +25,7 @@ describe('EnergyConsumedService', () => {
     it('should return the energy consumed in kwh for a given month',
       async () => {
 
+
         let mockedIntervalData: IntervalData = {
           data: [{
             start_interval: new Date('2023-01-01T00:00:00.000Z'),

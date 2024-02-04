@@ -29,6 +29,10 @@ docker image tag backend 10.1.1.101:5000/backend
 docker push 10.1.1.101:5000/backend
 ```
 
+## E2E test
+
+Running end to end test `nx run backend-e2e:e2e`
+
 ## Explore the Project Graph
 Run `nx graph` to show the graph of the workspace.
 It will show tasks that you can run with Nx.
