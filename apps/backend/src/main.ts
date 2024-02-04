@@ -6,7 +6,7 @@
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
-import { LoggerService } from './app/logger.service';
+import { LoggerService } from './app/logger/logger.service';
 import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
