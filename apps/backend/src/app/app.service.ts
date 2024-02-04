@@ -12,6 +12,9 @@ const energyConsumedByDateCache: Map<Date, number> = new Map();
 
 @Injectable()
 export class AppService {
+
+  private readonly logger = new Logger(AppService.name);
+
   getData(): { message: string } {
     return { message: myLib() };
   }
@@ -19,7 +22,7 @@ export class AppService {
   async getEnergyConsumed(monthVal: Date): Promise<EnergyConsumed> {
     if (energyConsumedByDateCache.has(monthVal)) {
       const cachedValue: number = energyConsumedByDateCache.get(monthVal);
-      Logger.log(`Cached value found for ${monthVal}, value from cache: ${cachedValue}`);
+      this.logger.log(`Cached value found for ${monthVal}, value from cache: ${cachedValue}`);
       return Promise.resolve({ energyConsumed: cachedValue });
     } else {
 
@@ -39,10 +42,10 @@ export class AppService {
   async getCarbonEmitted(monthVal: Date): Promise<CarbonEmitted> {
     if (carbonEmitByDateCache.has(monthVal)) {
       const cachedValue = carbonEmitByDateCache.get(monthVal);
-      Logger.log(`Cached value found for ${monthVal}, value from cache: ${cachedValue}`);
+      this.logger.log(`Cached value found for ${monthVal}, value from cache: ${cachedValue}`);
       return Promise.resolve({ carbonEmit: cachedValue });
     } else {
-      Logger.log(
+      this.logger.log(
         `Value not in cache for ${monthVal}, performing requests and calculating data'`
       );
       let meterData = await getHalfHourIntervalData(monthVal)
