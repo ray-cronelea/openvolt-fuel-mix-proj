@@ -16,13 +16,13 @@ export class CarbonIntensityService {
 
     // Because of an issue with the national intensity service, we need to call the service
     // with a timestamp of the 'to' time instead of the 'from' time as defined in the api documentation
-    let buggedTime = moment(time).add(30, 'minutes').toDate()
+    const buggedTime = moment(time).add(30, 'minutes').toDate()
 
     return await axios
       .get(`https://api.carbonintensity.org.uk/intensity/${buggedTime.toISOString()}`, { headers })
       .then(res => res.data)
       .then(json => json.data)
-      .then((intensities: Array<IntensityWrapper>) => intensities[0]);
+      .then((intensities: IntensityWrapper[]) => intensities[0]);
   }
 
 

@@ -26,7 +26,7 @@ describe('EnergyConsumedService', () => {
       async () => {
 
 
-        let mockedIntervalData: IntervalData = {
+        const mockedIntervalData: IntervalData = {
           data: [{
             start_interval: new Date('2023-01-01T00:00:00.000Z'),
             meter_id: undefined,
