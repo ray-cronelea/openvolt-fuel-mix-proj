@@ -28,6 +28,7 @@
     "@nx/eslint": "17.3.0",
     "@nx/eslint-plugin": "17.3.0",
     "@nx/jest": "17.3.0",
+    "@jest/globals": "^29.7.0",
     "@nx/js": "^17.3.0",
     "@nx/nest": "17.3.0",
     "@nx/node": "17.3.0",
