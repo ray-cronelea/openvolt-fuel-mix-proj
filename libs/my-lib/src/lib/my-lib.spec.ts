@@ -1,7 +1,7 @@
 import { myLib } from './my-lib';
 
 describe('myLib', () => {
-  it('should work', () => {
-    expect(myLib()).toEqual('my-lib');
+  it('returns correct value', () => {
+    expect(myLib()).toEqual('This value came from a library!');
   });
 });
