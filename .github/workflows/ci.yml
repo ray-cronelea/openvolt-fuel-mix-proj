@@ -16,7 +16,7 @@ jobs:
       - uses: pnpm/action-setup@v2
         with:
           version: 8
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --no-frozen-lockfile
       - run: nx run-many -t build -p backend
       - run: nx run-many -t test -p backend
 
