@@ -6,27 +6,42 @@ on:
   pull_request:
 
 jobs:
-  test:
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-    timeout-minutes: 20
+  main:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Setup pnpm
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm nx build backend
+      - run: pnpm nx test frontend
 
-      - name: Install PNPM
-        run: npm install -g pnpm
 
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build frontend
-        run: pnpm nx run frontend:build
-
-      - name: Build backend
-        run: pnpm nx run backend:build
-
-      - name: Build backend
-        run: pnpm nx run backend:test
+#  test:
+#    permissions:
+#      contents: 'read'
+#      id-token: 'write'
+#    timeout-minutes: 20
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#
+#      - name: Install PNPM
+#        run: npm install -g pnpm --dev
+#
+#      - name: Install dependencies
+#        run: pnpm install --dev
+#
+#      - name: Build frontend
+#        run: pnpm nx run frontend:build
+#
+#      - name: Build backend
+#        run: pnpm nx run backend:build
+#
+#      - name: Test backend
+#        run: pnpm nx run backend:test
