@@ -69,7 +69,7 @@ describe('AppController', () => {
   });
 
   describe('getCarbonEmitted', () => {
-    it('should return message from libraryds', async () => {
+    it('should return message from library', async () => {
       const appController: AppController = app.get<AppController>(AppController);
 
       intervalDataService.getHalfHourIntervalData.mockResolvedValue({
