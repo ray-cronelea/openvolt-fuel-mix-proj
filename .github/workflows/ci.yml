@@ -22,8 +22,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build
-        run: pnpm nx run-many -t build -p frontend backend
+      - name: Build frontend
+        run: pnpm nx run frontend:build
 
-      - name: Test all
-        run: pnpm nx run-many -t test -p frontend backend
+      - name: Build backend
+        run: pnpm nx run backend:build
+
+      - name: Build backend
+        run: pnpm nx run backend:test
