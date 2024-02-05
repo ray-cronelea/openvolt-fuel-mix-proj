@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { EnergyConsumed } from '../../../backend/src/app/domain-objects';
 
 describe('GET /api', () => {
   it('should return a message', async () => {

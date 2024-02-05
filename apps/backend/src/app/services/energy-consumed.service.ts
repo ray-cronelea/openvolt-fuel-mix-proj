@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { myLib } from '@new-workspace/my-lib';
 
-import { EnergyConsumed, IntervalData, MeterData } from '../domain-objects';
+import { EnergyConsumed, IntervalData, MeterData } from '../model/domain-objects';
 import { IntervalDataService } from '../datasource/interval-data.service';
 
 const energyConsumedByDateCache: Map<Date, number> = new Map();

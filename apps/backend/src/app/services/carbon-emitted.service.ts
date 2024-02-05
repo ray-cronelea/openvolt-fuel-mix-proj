@@ -1,9 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { myLib } from '@new-workspace/my-lib';
 
-import { CarbonEmitted, Intensity, IntensityWrapper, IntervalData, MeterData } from '../domain-objects';
+import { CarbonEmitted, Intensity, IntensityWrapper, IntervalData, MeterData } from '../model/domain-objects';
 
-import moment from 'moment';
 import { IntervalDataService } from '../datasource/interval-data.service';
 import { CarbonIntensityService } from '../datasource/carbon-intensity.service';
 
@@ -49,7 +48,7 @@ export class CarbonEmittedService {
     const carbonDataPromises: Array<Promise<number>> = [];
 
     for (const meterDatum of meterData) {
-      carbonDataPromises.push(this.carbonIntensityService.getHalfHourCarbonIntensityWrapper(moment(meterDatum.start_interval).add(30, 'minutes').toDate())
+      carbonDataPromises.push(this.carbonIntensityService.getHalfHourCarbonIntensityWrapper(meterDatum.start_interval)
         .then(intensityWrapper => validateDatesMatch(meterDatum, intensityWrapper))
         .then((intensityWrapper: IntensityWrapper) => intensityWrapper.intensity)
         .then((intensity: Intensity) => intensity.actual)

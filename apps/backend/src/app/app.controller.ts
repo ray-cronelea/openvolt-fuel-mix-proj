@@ -1,7 +1,7 @@
 import { Controller, Get, Logger, Query } from '@nestjs/common';
 
 import { EnergyConsumedService } from './services/energy-consumed.service';
-import { CarbonEmitted, EnergyConsumed } from './domain-objects';
+import { CarbonEmitted, EnergyConsumed } from './model/domain-objects';
 import { CarbonEmittedService } from './services/carbon-emitted.service';
 
 @Controller()

@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { IntensityWrapper } from '../domain-objects';
+import { IntensityWrapper } from '../model/domain-objects';
 import { CarbonIntensityService } from './carbon-intensity.service';
 import { jest } from '@jest/globals';
 import axios from 'axios';
@@ -39,7 +39,7 @@ describe('CarbonIntensityService', () => {
       const result: IntensityWrapper = await service.getHalfHourCarbonIntensityWrapper(new Date('2023-01-01T09:30:00.000Z'));
 
       expect(axios.get).toHaveBeenCalledWith(
-        'https://api.carbonintensity.org.uk/intensity/2023-01-01T09:30:00.000Z',
+        'https://api.carbonintensity.org.uk/intensity/2023-01-01T10:00:00.000Z',
         { headers: { Accept: 'application/json' } }
       );
 

@@ -46,6 +46,7 @@ To add dockerfile to project `nx g setup-docker`
 
 
 ## NEXT STEPS
-Move business logic to separate layer?
-Add cache for allready requested values
-Add functionality for parsing of both APIs and see how it looks.
+Add rest of unit testing for unhappy path where dates matched
+add test for cached values
+
+Clean up front end

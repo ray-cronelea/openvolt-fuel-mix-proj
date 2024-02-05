@@ -1,4 +1,4 @@
-import { IntervalData } from '../domain-objects';
+import { IntervalData } from '../model/domain-objects';
 import moment from 'moment/moment';
 import axios from 'axios';
 import { Injectable, Logger } from '@nestjs/common';

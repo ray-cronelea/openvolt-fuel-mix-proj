@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { IntervalDataService } from './interval-data.service';
-import { IntervalData } from '../domain-objects';
+import { IntervalData } from '../model/domain-objects';
 import { jest } from '@jest/globals';
 import axios from 'axios';
 

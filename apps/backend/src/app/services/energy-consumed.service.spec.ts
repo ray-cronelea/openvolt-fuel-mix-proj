@@ -1,5 +1,5 @@
 import { EnergyConsumedService } from './energy-consumed.service';
-import { IntervalData } from '../domain-objects';
+import { IntervalData } from '../model/domain-objects';
 import { IntervalDataService } from '../datasource/interval-data.service';
 import { TestBed } from '@automock/jest';
 
