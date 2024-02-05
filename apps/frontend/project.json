@@ -72,8 +72,8 @@
       }
     },
     "docker-build": {
-      "dependsOn": ["clean"],
-      "command": "docker buildx build --platform linux/amd64 -f apps/frontend/Dockerfile . -t 10.1.1.101:5000/frontend:latest --push --output=type=registry,registry.insecure=true",
+      "dependsOn": ["build"],
+      "command": "docker buildx build --platform linux/amd64 -f apps/frontend/Dockerfile . -t rayirl/carbonmix-frontend:latest --push",
       "configurations": {
         "development": {
           "buildTarget": "frontend:build:development"

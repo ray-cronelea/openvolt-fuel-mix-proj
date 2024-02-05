@@ -17,7 +17,7 @@ services:
 
 
     frontend:
-        image: 10.1.1.101:5000/frontend:latest
+        image: rayirl/carbonmix-frontend:latest
         platform: linux/amd64
         container_name: frontend
         ports:
@@ -29,7 +29,7 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
 
     backend:
-        image: 10.1.1.101:5000/backend:latest
+        image: rayirl/carbonmix-backend:latest
         container_name: backend
         platform: linux/amd64
         ports:

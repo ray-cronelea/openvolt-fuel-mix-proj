@@ -53,7 +53,7 @@
     },
     "docker-build": {
       "dependsOn": ["build"],
-      "command": "docker buildx build --platform linux/amd64,linux/arm64 -f apps/backend/Dockerfile . -t 10.1.1.101:5000/backend:latest --push --output=type=registry,registry.insecure=true",
+      "command": "docker buildx build --platform linux/amd64,linux/arm64 -f apps/backend/Dockerfile . -t rayirl/carbonmix-backend:latest --push",
       "configurations": {
         "development": {
           "buildTarget": "backend:build:development"

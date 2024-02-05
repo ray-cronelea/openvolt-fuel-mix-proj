@@ -22,11 +22,11 @@ docker run -p 3000:3000 -t backend
 
 Tag and push docker image to private unsecured docker registry
 ```
-docker image tag frontend 10.1.1.101:5000/frontend
-docker push 10.1.1.101:5000/frontend
+docker image tag frontend rayirl/carbonmix-frontend
+docker push rayirl/carbonmix-frontend
 
-docker image tag backend 10.1.1.101:5000/backend
-docker push 10.1.1.101:5000/backend
+docker image tag backend rayirl/carbonmix-backend
+docker push rayirl/carbonmix-backend
 ```
 
 ## E2E test
