@@ -1,25 +1,25 @@
-export type EnergyConsumed = { energyConsumed: number };
-export type CarbonEmitted = { carbonEmit: number; };
-export type IntervalData = {
+export interface EnergyConsumed { energyConsumed: number }
+export interface CarbonEmitted { carbonEmit: number; }
+export interface IntervalData {
   startInterval: Date,
   endInterval: Date,
   granularity: string,
-  data: Array<MeterData>
+  data: MeterData[]
 }
-export type MeterData = {
+export interface MeterData {
   start_interval: Date;
   meter_id: string;
   meter_number: string;
   customer_id: string;
   consumption: number;
   consumption_units: string;
-};
-export type IntensityWrapper = {
+}
+export interface IntensityWrapper {
   from: Date,
   to: Date,
   intensity: Intensity
 }
-export type Intensity = {
+export interface Intensity {
   forecast: number,
   actual: number,
   index: string

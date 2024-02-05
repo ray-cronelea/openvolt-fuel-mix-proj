@@ -2,7 +2,7 @@ version: '3.3'
 services:
 
     backend:
-        image: rayirl/carbonmix-backend:latest
+        image: rayirl/carbonmix-backend:testing
         container_name: backend
         platform: linux/amd64
         ports:

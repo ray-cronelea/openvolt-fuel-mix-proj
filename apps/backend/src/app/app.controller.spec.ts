@@ -61,7 +61,7 @@ describe('AppController', () => {
         }]
       });
 
-      let result = await appController.getEnergyConsumed(new Date('2023-02-01T00:00:00.000Z'));
+      const result = await appController.getEnergyConsumed(new Date('2023-02-01T00:00:00.000Z'));
 
       expect(result).toEqual({ energyConsumed: 123.456 });
       expect(intervalDataService.getMonthIntervalData).toHaveBeenCalledWith(new Date('2023-02-01T00:00:00.000Z'));
@@ -69,7 +69,7 @@ describe('AppController', () => {
   });
 
   describe('getCarbonEmitted', () => {
-    it('should return message from libraryds', async () => {
+    it('should return message from library', async () => {
       const appController: AppController = app.get<AppController>(AppController);
 
       intervalDataService.getHalfHourIntervalData.mockResolvedValue({
@@ -116,7 +116,7 @@ describe('AppController', () => {
           }
         });
 
-      let result = await appController.getCarbonEmitted(new Date('2023-01-01T00:00:00.000Z'));
+      const result = await appController.getCarbonEmitted(new Date('2023-01-01T00:00:00.000Z'));
 
       expect(result).toEqual({ carbonEmit: 64937.856 });
       expect(intervalDataService.getHalfHourIntervalData).toHaveBeenCalledWith(new Date('2023-01-01T00:00:00.000Z'));

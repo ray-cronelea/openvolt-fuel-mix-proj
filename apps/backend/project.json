@@ -56,7 +56,8 @@
       "command": "docker buildx build --platform linux/amd64,linux/arm64 -f apps/backend/Dockerfile . -t rayirl/carbonmix-backend:latest --push",
       "configurations": {
         "development": {
-          "buildTarget": "backend:build:development"
+          "buildTarget": "backend:build:development",
+          "command": "docker buildx build --platform linux/amd64,linux/arm64 -f apps/backend/Dockerfile . -t rayirl/carbonmix-backend:testing --push"
         },
         "production": {
           "buildTarget": "backend:build:production"

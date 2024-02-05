@@ -4,7 +4,7 @@ import { myLib } from '@new-workspace/my-lib';
 import { EnergyConsumed, IntervalData, MeterData } from '../model/domain-objects';
 import { IntervalDataService } from '../datasource/interval-data.service';
 
-const energyConsumedByDateCache: Map<Date, number> = new Map();
+const energyConsumedByDateCache = new Map<Date, number>();
 
 @Injectable()
 export class EnergyConsumedService {
@@ -27,7 +27,7 @@ export class EnergyConsumedService {
 
       return this.intervalDataService.getMonthIntervalData(monthVal)
         .then((intervalData: IntervalData) => intervalData.data)
-        .then((meterData: Array<MeterData>) => meterData[0])
+        .then((meterData: MeterData[]) => meterData[0])
         .then((meterDatum: MeterData) => meterDatum.consumption)
         .then((energyConsumption: number) => {
           energyConsumedByDateCache.set(monthVal, energyConsumption);

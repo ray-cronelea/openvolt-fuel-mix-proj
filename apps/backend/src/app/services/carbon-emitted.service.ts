@@ -6,7 +6,7 @@ import { CarbonEmitted, Intensity, IntensityWrapper, IntervalData, MeterData } f
 import { IntervalDataService } from '../datasource/interval-data.service';
 import { CarbonIntensityService } from '../datasource/carbon-intensity.service';
 
-const carbonEmitByDateCache: Map<Date, number> = new Map();
+const carbonEmitByDateCache = new Map<Date, number>();
 
 @Injectable()
 export class CarbonEmittedService {
@@ -29,11 +29,11 @@ export class CarbonEmittedService {
       return Promise.resolve({ carbonEmit: cachedValue });
     } else {
       this.logger.log(`Value not in cache for ${monthVal}, performing requests and calculating data'`);
-      let meterData = await this.intervalDataService.getHalfHourIntervalData(monthVal)
+      const meterData = await this.intervalDataService.getHalfHourIntervalData(monthVal)
         .then((json: IntervalData) => json.data);
 
-      const carbonDataPromises: Array<Promise<number>> = this.createCarbonDataPromises(meterData);
-      let carbonEmitGrams = (await Promise.all(carbonDataPromises))
+      const carbonDataPromises: Promise<number>[] = this.createCarbonDataPromises(meterData);
+      const carbonEmitGrams = (await Promise.all(carbonDataPromises))
         .reduce((sum, current) => sum + current, 0);
 
       carbonEmitByDateCache.set(monthVal, carbonEmitGrams);
@@ -43,9 +43,9 @@ export class CarbonEmittedService {
     }
   }
 
-  createCarbonDataPromises(meterData: Array<MeterData>): Promise<number>[] {
+  createCarbonDataPromises(meterData: MeterData[]): Promise<number>[] {
 
-    const carbonDataPromises: Array<Promise<number>> = [];
+    const carbonDataPromises: Promise<number>[] = [];
 
     for (const meterDatum of meterData) {
       carbonDataPromises.push(this.carbonIntensityService.getHalfHourCarbonIntensityWrapper(meterDatum.start_interval)

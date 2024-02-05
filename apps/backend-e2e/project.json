@@ -7,7 +7,7 @@
   "projectType": "application",
   "targets": {
     "e2e": {
-      "dependsOn": ["backend:docker-build"],
+      "dependsOn": ["backend:docker-build:development"],
       "executor": "@nx/jest:jest",
       "outputs": [
         "{workspaceRoot}/coverage/{e2eProjectRoot}"
