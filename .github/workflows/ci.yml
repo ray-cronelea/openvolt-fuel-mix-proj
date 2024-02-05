@@ -2,9 +2,14 @@ name: CI
 on:
   push:
     branches:
+      # Change this if your primary branch is not main
       - main
-      - deploying-to-production
   pull_request:
+
+# Needed for nx-set-shas when run on the main branch
+permissions:
+  actions: read
+  contents: read
 
 jobs:
   main:
@@ -13,62 +18,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      # Setup pnpm
-      - uses: pnpm/action-setup@v2
+      # Cache node_modules
+      - uses: actions/setup-node@v3
         with:
-          version: 8
-      - run: pnpm install --no-frozen-lockfile
-      - run: pnpm nx build backend
-      - run: pnpm nx test backend
+          node-version: 20
+          cache: 'npm'
+      - run: npx nx-cloud start-ci-run --distribute-on="5 linux-medium-js" --stop-agents-after="build" # this line enables distribution
+      - run: npm ci
+      - uses: nrwl/nx-set-shas@v3
+      # This line is needed for nx affected to work when CI is running on a PR
+      - run: git branch --track main origin/main
 
-
-
-
-#name: CI
-#on:
-#  push:
-#    branches:
-#      - main
-#      - deploying-to-production
-#  pull_request:
-#
-#jobs:
-#  main:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 0
-#      # Setup pnpm
-#      - uses: pnpm/action-setup@v2
-#        with:
-#          version: 8
-#      - run: pnpm install --no-frozen-lockfile
-#      - run: pnpm nx run-many -t build -p backend
-#      - run: pnpm nx run-many -t test -p backend
-
-
-#  test:
-#    permissions:
-#      contents: 'read'
-#      id-token: 'write'
-#    timeout-minutes: 20
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#
-#      - name: Install PNPM
-#        run: npm install -g pnpm --dev
-#
-#      - name: Install dependencies
-#        run: pnpm install --dev
-#
-#      - name: Build frontend
-#        run: pnpm nx run frontend:build
-#
-#      - name: Build backend
-#        run: pnpm nx run backend:build
-#
-#      - name: Test backend
-#        run: pnpm nx run backend:test
+      - run: npx nx-cloud record -- nx format:check
+      - run: npx nx affected -t lint test build --parallel=3
