@@ -19,6 +19,7 @@ jobs:
           version: 8
       - run: pnpm install --no-frozen-lockfile
       - run: pnpm nx build backend
+      - run: pnpm nx test backend
 
 
 
