@@ -19,39 +19,56 @@ describe('CarbonIntensityService', () => {
     service = app.get<CarbonIntensityService>(CarbonIntensityService);
   });
 
-  describe('getHalfHourCarbonIntensityWrapper', () => {
-    it('should return half hour carbon intensity data from carbon intensity api', async () => {
+  describe('getHalfHourCarbonIntensityWrapperForMonth', () => {
+    it('should return half hour carbon intensity data from carbon intensity api for month', async () => {
 
       mockedAxios.get.mockResolvedValueOnce({
         data: {
           data: [{
-            from: '2018-01-20T12:00Z',
-            to: '2018-01-20T12:30Z',
+            from: '2023-01-01T00:00Z',
+            to: '2023-01-01T00:30Z',
             intensity: {
               forecast: 266,
               actual: 263,
               index: 'moderate'
             }
-          }]
+          },
+            {
+              from: '2023-01-01T00:30Z',
+              to: '2023-01-01T01:00Z',
+              intensity: {
+                forecast: 443,
+                actual: 211,
+                index: 'moderate'
+              }
+            }]
         }
       });
 
-      const result: IntensityWrapper = await service.getHalfHourCarbonIntensityWrapper(new Date('2023-01-01T09:30:00.000Z'));
+      const result: IntensityWrapper[] = await service.getHalfHourCarbonIntensityWrapperForMonth(new Date('2023-01-01T00:00:00.000Z'));
 
       expect(axios.get).toHaveBeenCalledWith(
-        'https://api.carbonintensity.org.uk/intensity/2023-01-01T10:00:00.000Z',
+        'https://api.carbonintensity.org.uk/intensity/2023-01-01T00:30:00.000Z/2023-02-01T00:00:00.000Z',
         { headers: { Accept: 'application/json' } }
       );
 
-      expect(result).toEqual({
-        from: '2018-01-20T12:00Z',
-        to: '2018-01-20T12:30Z',
+      expect(result).toEqual([{
+        from: '2023-01-01T00:00Z',
+        to: '2023-01-01T00:30Z',
         intensity: {
           forecast: 266,
           actual: 263,
           index: 'moderate'
         }
-      });
+      },{
+        from: '2023-01-01T00:30Z',
+        to: '2023-01-01T01:00Z',
+        intensity: {
+          forecast: 443,
+          actual: 211,
+          index: 'moderate'
+        }
+      }]);
     });
   });
 

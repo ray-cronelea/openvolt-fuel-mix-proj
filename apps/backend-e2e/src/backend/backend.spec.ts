@@ -17,3 +17,12 @@ describe('GET /api/energy-consumed', () => {
     expect(res.data).toEqual({ energyConsumed: '91122.30' });
   }, 60000);
 })
+
+describe('GET /api/carbon-emitted', () => {
+  it('should return a carbon emitted response', async () => {
+    const res = await axios.get(`api/carbon-emitted?reqDate=2023-02-01T00:00:00.000Z`);
+
+    expect(res.status).toBe(200);
+    expect(res.data).toEqual({ carbonEmit: 15283733.099999992 });
+  }, 60000);
+})

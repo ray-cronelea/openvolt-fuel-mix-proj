@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { myLib } from '@new-workspace/my-lib';
 
-import { CarbonEmitted, Intensity, IntensityWrapper, IntervalData, MeterData } from '../model/domain-objects';
+import { CarbonEmitted, IntensityWrapper, IntervalData, MeterData } from '../model/domain-objects';
 
 import { IntervalDataService } from '../datasource/interval-data.service';
 import { CarbonIntensityService } from '../datasource/carbon-intensity.service';
@@ -28,13 +28,21 @@ export class CarbonEmittedService {
       this.logger.log(`Cached value found for ${monthVal}, value from cache: ${cachedValue}`);
       return Promise.resolve({ carbonEmit: cachedValue });
     } else {
+
       this.logger.log(`Value not in cache for ${monthVal}, performing requests and calculating data'`);
+
       const meterData = await this.intervalDataService.getHalfHourIntervalData(monthVal)
         .then((json: IntervalData) => json.data);
 
-      const carbonDataPromises: Promise<number>[] = this.createCarbonDataPromises(meterData);
-      const carbonEmitGrams = (await Promise.all(carbonDataPromises))
-        .reduce((sum, current) => sum + current, 0);
+      const carbonData = await this.carbonIntensityService.getHalfHourCarbonIntensityWrapperForMonth(monthVal);
+
+      const mergedData: {
+        time: Date;
+        kilowattHours: number;
+        gramCarbonDioxidePerKilowattHour: number
+      }[] = mergeMeterAndCarbonData(meterData, carbonData);
+
+      const carbonEmitGrams: number = this.computeCarbonEmitGrams(mergedData);
 
       carbonEmitByDateCache.set(monthVal, carbonEmitGrams);
       return {
@@ -43,37 +51,45 @@ export class CarbonEmittedService {
     }
   }
 
-  createCarbonDataPromises(meterData: MeterData[]): Promise<number>[] {
+  private computeCarbonEmitGrams(mergedData: {
+    time: Date;
+    kilowattHours: number;
+    gramCarbonDioxidePerKilowattHour: number
+  }[]) {
 
-    const carbonDataPromises: Promise<number>[] = [];
-
-    for (const meterDatum of meterData) {
-      carbonDataPromises.push(this.carbonIntensityService.getHalfHourCarbonIntensityWrapper(meterDatum.start_interval)
-        .then(intensityWrapper => validateDatesMatch(meterDatum, intensityWrapper))
-        .then((intensityWrapper: IntensityWrapper) => intensityWrapper.intensity)
-        .then((intensity: Intensity) => intensity.actual)
-        .then(actualIntensity => calculateCarbonDioxideGramsProduced(actualIntensity, meterDatum.consumption)));
+    let totalCarbonEmitGrams = 0;
+    for (const mergedDatum of mergedData) {
+      totalCarbonEmitGrams += calculateCarbonDioxideGramsProduced(mergedDatum.gramCarbonDioxidePerKilowattHour, mergedDatum.kilowattHours);
     }
 
-    return carbonDataPromises;
+    return totalCarbonEmitGrams;
   }
 }
 
+function mergeMeterAndCarbonData(meterData: MeterData[], carbonData: IntensityWrapper[]): {
+  time: Date;
+  kilowattHours: number;
+  gramCarbonDioxidePerKilowattHour: number;
+}[] {
+
+  const carbonEmittedByFromDate = new Map(carbonData.map(i => [new Date(i.from).toISOString(), i.intensity.actual]));
+
+  return meterData.map(meterDatum => {
+    const gramCarbonDioxidePerKilowattHour = carbonEmittedByFromDate.get(new Date(meterDatum.start_interval).toISOString());
+
+    if (gramCarbonDioxidePerKilowattHour === undefined) {
+      throw new Error(`No gramCarbonDioxidePerKilowattHour value found in map for ${meterDatum.start_interval}`);
+    }
+
+    return {
+      time: meterDatum.start_interval,
+      kilowattHours: meterDatum.consumption,
+      gramCarbonDioxidePerKilowattHour: gramCarbonDioxidePerKilowattHour
+    };
+  });
+}
 
 function calculateCarbonDioxideGramsProduced(gramCarbonDioxidePerKilowattHour: number, kilowattHours: number) {
   return gramCarbonDioxidePerKilowattHour * kilowattHours;
 }
 
-function dateTimeMatches(date1: Date, date2: Date) {
-  return new Date(date1).toISOString() === new Date(date2).toISOString();
-}
-
-function validateDatesMatch(meterData: MeterData, intensityWrapper: IntensityWrapper): Promise<IntensityWrapper> {
-  return new Promise((resolve, reject) => {
-    if (dateTimeMatches(meterData.start_interval, intensityWrapper.from)) {
-      resolve(intensityWrapper);
-    } else {
-      reject(`There was a mismatch between meter data start interval ${intensityWrapper.from} and intensity wrapper from ${meterData.start_interval}`);
-    }
-  });
-}

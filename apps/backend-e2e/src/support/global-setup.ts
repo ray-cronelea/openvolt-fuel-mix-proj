@@ -29,9 +29,9 @@ module.exports = async function () {
       },
     });
 
-    console.log('Waiting 5 seconds for the services to warm-up')
+    console.log('Waiting 10 seconds for the services to warm-up')
 
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    await new Promise(resolve => setTimeout(resolve, 10000));
 
     console.log('Boot-up completed.');
   } catch (err) {

@@ -96,8 +96,8 @@ describe('AppController', () => {
         ]
       });
 
-      carbonIntensityService.getHalfHourCarbonIntensityWrapper
-        .mockResolvedValueOnce({
+      carbonIntensityService.getHalfHourCarbonIntensityWrapperForMonth
+        .mockResolvedValueOnce([{
           'from': new Date('2023-01-01T00:00:00.000Z'),
           'to': new Date('2023-01-01T00:30:00.000Z'),
           'intensity': {
@@ -105,16 +105,17 @@ describe('AppController', () => {
             'actual': 263,
             'index': 'moderate'
           }
-        })
-        .mockResolvedValueOnce({
-          'from': new Date('2023-01-01T00:30:00.000Z'),
-          'to': new Date('2023-01-01T01:00:00.000Z'),
-          'intensity': {
-            'forecast': 266,
-            'actual': 263,
-            'index': 'moderate'
+        },
+          {
+            'from': new Date('2023-01-01T00:30:00.000Z'),
+            'to': new Date('2023-01-01T01:00:00.000Z'),
+            'intensity': {
+              'forecast': 266,
+              'actual': 263,
+              'index': 'moderate'
+            }
           }
-        });
+        ]);
 
       const result = await appController.getCarbonEmitted(new Date('2023-01-01T00:00:00.000Z'));
 
@@ -123,9 +124,7 @@ describe('AppController', () => {
 
       // Because of an issue with the national intensity service, we need to call the service
       // with a timestamp of the 'to' time instead of the 'from' time as defined in the api documentation
-
-      expect(carbonIntensityService.getHalfHourCarbonIntensityWrapper).toHaveBeenCalledWith( new Date('2023-01-01T00:00:00.000Z'));
-      expect(carbonIntensityService.getHalfHourCarbonIntensityWrapper).toHaveBeenCalledWith(new Date('2023-01-01T00:30:00.000Z'));
+      expect(carbonIntensityService.getHalfHourCarbonIntensityWrapperForMonth).toHaveBeenCalledWith(new Date('2023-01-01T00:00:00.000Z'));
     });
   });
 });
