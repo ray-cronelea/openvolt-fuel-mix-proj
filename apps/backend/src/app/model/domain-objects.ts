@@ -1,5 +1,10 @@
 export interface EnergyConsumed { energyConsumed: number }
 export interface CarbonEmitted { carbonEmit: number; }
+
+export interface FuelMix {
+  productionType: string,
+  kilowatt: number
+}
 export interface IntervalData {
   startInterval: Date,
   endInterval: Date,
@@ -23,4 +28,15 @@ export interface Intensity {
   forecast: number,
   actual: number,
   index: string
+}
+
+export interface GenerationWrapper {
+  from: Date,
+  to: Date,
+  generationmix: GenerationMix[]
+}
+
+export interface GenerationMix {
+  fuel: string,
+  perc: number,
 }

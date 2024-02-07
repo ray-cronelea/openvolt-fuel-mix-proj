@@ -3,6 +3,7 @@ import { Controller, Get, Logger, Query } from '@nestjs/common';
 import { EnergyConsumedService } from './services/energy-consumed.service';
 import { CarbonEmitted, EnergyConsumed } from './model/domain-objects';
 import { CarbonEmittedService } from './services/carbon-emitted.service';
+import { GenerationMixService } from './services/generation-mix.service';
 
 @Controller()
 export class AppController {
@@ -11,7 +12,8 @@ export class AppController {
 
   constructor(
     private readonly energyConsumedService: EnergyConsumedService,
-    private readonly carbonEmittedService: CarbonEmittedService
+    private readonly carbonEmittedService: CarbonEmittedService,
+    private readonly generationMixService: GenerationMixService
   ) {
   }
 
@@ -31,19 +33,7 @@ export class AppController {
 
   @Get('energy-mix') getEnergyMix(@Query('reqDate') reqDate: Date) {
     this.logger.log('GET energy-mix with reqDate: ' + reqDate);
-    return {
-      data: [
-        {productionType: "gas", kilowatt: 1},
-        {productionType: "coal", kilowatt: 1},
-        {productionType: "biomass", kilowatt: 1},
-        {productionType: "nuclear", kilowatt: 1},
-        {productionType: "hydro", kilowatt: 1},
-        {productionType: "imports", kilowatt: 1},
-        {productionType: "other", kilowatt: 1},
-        {productionType: "wind", kilowatt: 1},
-        {productionType: "solar", kilowatt: 1},
-      ]
-    };
+    return this.generationMixService.getGenerationMix(reqDate);
   }
 
 }

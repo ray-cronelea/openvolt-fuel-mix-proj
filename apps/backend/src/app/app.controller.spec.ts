@@ -8,12 +8,14 @@ import { CarbonIntensityService } from './datasource/carbon-intensity.service';
 import { IntervalDataService } from './datasource/interval-data.service';
 import { mock, mockReset } from 'jest-mock-extended';
 import { _MockProxy } from 'jest-mock-extended/lib/Mock';
+import { GenerationMixService } from './services/generation-mix.service';
 
 describe('AppController', () => {
   let app: TestingModule;
 
   const intervalDataService: _MockProxy<IntervalDataService> = mock<IntervalDataService>();
   const carbonIntensityService: _MockProxy<CarbonIntensityService> = mock<CarbonIntensityService>();
+  const generationMixService: _MockProxy<GenerationMixService> = mock<GenerationMixService>();
 
   beforeAll(async () => {
 
@@ -26,6 +28,9 @@ describe('AppController', () => {
       }, {
         provide: CarbonIntensityService,
         useValue: carbonIntensityService
+      }, {
+        provide: GenerationMixService,
+        useValue: generationMixService
       }]
     })
       .compile();
