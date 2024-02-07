@@ -2,6 +2,7 @@
 import EnergyConsumed from './EnergyConsumed.vue';
 import CarbonEmitted from './CarbonEmitted.vue';
 import { ref } from 'vue';
+import FuelMix from './FuelMix.vue';
 
 defineProps<{}>();
 
@@ -32,6 +33,11 @@ const selectedMonth = ref('2023-01-01T00:00:00.000Z');
             <CarbonEmitted :reqDate=selectedMonth></CarbonEmitted>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="24">
+            <FuelMix :reqDate=selectedMonth></FuelMix>
+          </el-col>
+        </el-row>
       </div>
     </div>
   </div>
@@ -41,6 +47,7 @@ const selectedMonth = ref('2023-01-01T00:00:00.000Z');
 #commands {
   padding: 2.5rem 2rem;
   margin-top: 3.5rem;
+  background: white;
 }
 
 .shadow {

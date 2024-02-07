@@ -29,4 +29,21 @@ export class AppController {
     return this.carbonEmittedService.getCarbonEmitted(reqDate);
   }
 
+  @Get('energy-mix') getEnergyMix(@Query('reqDate') reqDate: Date) {
+    this.logger.log('GET energy-mix with reqDate: ' + reqDate);
+    return {
+      data: [
+        {productionType: "gas", kilowatt: 1},
+        {productionType: "coal", kilowatt: 1},
+        {productionType: "biomass", kilowatt: 1},
+        {productionType: "nuclear", kilowatt: 1},
+        {productionType: "hydro", kilowatt: 1},
+        {productionType: "imports", kilowatt: 1},
+        {productionType: "other", kilowatt: 1},
+        {productionType: "wind", kilowatt: 1},
+        {productionType: "solar", kilowatt: 1},
+      ]
+    };
+  }
+
 }
