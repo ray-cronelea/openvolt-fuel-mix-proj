@@ -33,8 +33,11 @@ jobs:
       - uses: nrwl/nx-set-shas@v3
       # This line is needed for nx affected to work when CI is running on a PR
       # - run: git branch --track main origin/main
-      # - run: npx nx affected -t lint test build --parallel=3
+
       - run: npx nx run-many -t lint test build -p backend frontend backend-e2e frontend-e2e
+
       - run: npx nx run backend:docker-build:development
       - run: npx nx run backend-e2e:e2e --verbose
       - run: npx nx run backend:docker-build:production
+
+      - run: npx nx run frontend:docker-build:production
