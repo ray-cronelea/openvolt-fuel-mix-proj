@@ -1,3 +1,23 @@
+<template>
+  <div class="wrapper">
+    <section v-if="errored">
+      <p>Error</p>
+    </section>
+
+    <div v-else>
+
+      <div v-if="loading">Loading...</div>
+      <div v-else>
+        <VueUiSparkStackbar
+          :config="config"
+          :dataset="fuel_mix_content" />
+      </div>
+    </div>
+
+
+  </div>
+</template>
+
 <script lang="ts" setup>
 
 import { VueUiSparkStackbar } from 'vue-data-ui';
@@ -36,7 +56,11 @@ import axios from 'axios';
 function mapData(data: { productionType: string, kilowatt: number }[]): { name: string, value: number }[] {
   let mappedData: { name: string, value: number }[] = [];
   for (let datum of data) {
-    mappedData.push({ name: datum.productionType, value: datum.kilowatt });
+    let value = datum.kilowatt;
+    if (value === null) {
+      value = 0;
+    }
+    mappedData.push({ name: datum.productionType, value: value });
   }
   return mappedData;
 }
@@ -44,7 +68,7 @@ function mapData(data: { productionType: string, kilowatt: number }[]): { name: 
 export default {
   data() {
     return {
-      carbon_emitted_content: [],
+      fuel_mix_content: [{name:"", value:0.0}],
       loading: true,
       errored: false
     };
@@ -63,13 +87,16 @@ export default {
     this.getOrder(this.reqDate);
   },
   methods: {
-    getOrder(reqDateIn) {
+    getOrder(reqDateIn: string) {
       this.loading = true;
       this.errored = false;
 
       const params = {
         reqDate: reqDateIn
       };
+
+
+      console.log(`energy-consumed params: ${JSON.stringify(params)}`);
 
       axios
         .get('api/energy-mix', { params })
@@ -78,7 +105,7 @@ export default {
           return response.data;
         })
         .then((data) => {
-          this.carbon_emitted_content = mapData(data);
+          this.fuel_mix_content = mapData(data);
         })
         .catch((error) => {
           console.log(error);
@@ -90,14 +117,6 @@ export default {
 };
 
 </script>
-
-<template>
-  <div class="wrapper">
-    <VueUiSparkStackbar
-      :config="config"
-      :dataset="carbon_emitted_content" />
-  </div>
-</template>
 
 <style scoped>
 

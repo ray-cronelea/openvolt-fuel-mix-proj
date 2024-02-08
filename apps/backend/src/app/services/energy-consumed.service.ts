@@ -21,7 +21,7 @@ export class EnergyConsumedService {
   async getEnergyConsumed(monthVal: Date): Promise<EnergyConsumed> {
     if (energyConsumedByDateCache.has(monthVal)) {
       const cachedValue: number = energyConsumedByDateCache.get(monthVal);
-      this.logger.log(`Cached value found for ${monthVal}, value from cache: ${cachedValue}`);
+      this.logger.debug(`Cached value found for ${monthVal}, value from cache: ${cachedValue}`);
       return Promise.resolve({ energyConsumed: cachedValue });
     } else {
 

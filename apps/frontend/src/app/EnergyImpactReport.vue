@@ -6,7 +6,7 @@ import FuelMix from './FuelMix.vue';
 
 defineProps<{}>();
 
-const selectedMonth = ref('2023-01-01T00:00:00.000Z');
+const selectedMonth = ref('2023-01');
 </script>
 
 <template>
@@ -16,11 +16,14 @@ const selectedMonth = ref('2023-01-01T00:00:00.000Z');
         <el-row>
           <el-col>
             <div class="block">
+              <div>fix timestamp</div>
               <el-date-picker
                 v-model="selectedMonth"
                 :clearable=false
                 placeholder="Pick a month"
                 type="month"
+                format="YYYY-MM"
+                value-format="YYYY-MM"
               />
             </div>
           </el-col>

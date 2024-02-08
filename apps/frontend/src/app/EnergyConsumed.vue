@@ -8,7 +8,7 @@
       <div v-if="loading">Loading...</div>
 
       <div v-else>
-        <el-statistic :value="energy_consumed_content.energyConsumed">
+        <el-statistic :value="energy_consumed_content">
           <template #title>
             <div style="display: inline-flex; align-items: center">
               Energy Consumed
@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import axios from 'axios';
 
 export default {
@@ -34,7 +34,7 @@ export default {
   },
   props: {
     reqDate: {
-      default: '2023-01-01T00:00:00.000Z'
+      default: '2023-01'
     }
   },
   watch: {
@@ -50,14 +50,20 @@ export default {
       this.loading = true;
       this.errored = false;
 
+      console.log(reqDateIn)
+
+
       const params = {
         reqDate: reqDateIn
       };
 
+      console.log(`energy-consumed params: ${JSON.stringify(params)}`);
+
       axios
         .get('api/energy-consumed', { params })
         .then((response) => {
-          this.energy_consumed_content = response.data;
+          console.log(response.data);
+          this.energy_consumed_content = Number(response.data.energyConsumed);
         })
         .catch((error) => {
           console.log(error);

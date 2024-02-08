@@ -29,7 +29,7 @@ export class CarbonIntensityService {
       .then(res => res.data)
       .then(json => json.data);
 
-    //this.logger.debug(`Get request to ${url} responded with ${JSON.stringify(result)}`);
+    this.logger.debug(`Performing get request to ${url}`);
 
     return result;
   }
@@ -45,12 +45,12 @@ export class CarbonIntensityService {
 
     const url = `https://api.carbonintensity.org.uk/generation/${fromTime.toISOString()}/${toTime.toISOString()}`;
 
+    this.logger.debug(`Performing get request to ${url}`);
+
     const result = await axios
       .get(url, { headers })
       .then(res => res.data)
       .then(json => json.data);
-
-    this.logger.debug(`Get request to ${url} responded with ${JSON.stringify(result)}`);
 
     return result;
   }

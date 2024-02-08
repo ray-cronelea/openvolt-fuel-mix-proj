@@ -10,11 +10,12 @@ export class IntervalDataService {
   private readonly logger = new Logger(IntervalDataService.name);
 
   async getMonthIntervalData(monthVal: Date): Promise<IntervalData> {
+
     const params = {
       meter_id: '6514167223e3d1424bf82742',
       granularity: 'month',
-      start_date: moment(monthVal).toISOString(),
-      end_date: moment(monthVal)
+      start_date: moment.utc(monthVal).toISOString(),
+      end_date: moment.utc(monthVal)
         .add(1, 'month')
         .subtract(1, 'second')
         .toISOString()
@@ -25,8 +26,10 @@ export class IntervalDataService {
       'x-api-key': 'test-Z9EB05N-07FMA5B-PYFEE46-X4ECYAR'
     };
 
+    const url = 'https://api.openvolt.com/v1/interval-data';
+    this.logger.debug(`Performing get request to ${url} with params ${JSON.stringify(params)}`);
     return await axios
-      .get('https://api.openvolt.com/v1/interval-data', { params, headers })
+      .get(url, { params, headers })
       .then(res => res.data);
   }
 
@@ -46,8 +49,12 @@ export class IntervalDataService {
       'x-api-key': 'test-Z9EB05N-07FMA5B-PYFEE46-X4ECYAR'
     };
 
+
+    const url = 'https://api.openvolt.com/v1/interval-data';
+    this.logger.debug(`Performing get request to ${url} with params ${JSON.stringify(params)}`);
+
     return await axios
-      .get('https://api.openvolt.com/v1/interval-data', { params, headers })
+      .get(url, { params, headers })
       .then(res => res.data);
   }
 

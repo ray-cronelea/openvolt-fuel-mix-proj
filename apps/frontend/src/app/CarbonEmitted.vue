@@ -54,6 +54,7 @@ export default {
         reqDate: reqDateIn
       };
 
+      console.log(`carbon-emitted params: ${JSON.stringify(params)}`);
       axios
         .get('api/carbon-emitted', { params })
         .then((response) => {

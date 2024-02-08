@@ -25,7 +25,7 @@ export class CarbonEmittedService {
   async getCarbonEmitted(monthVal: Date): Promise<CarbonEmitted> {
     if (carbonEmitByDateCache.has(monthVal)) {
       const cachedValue = carbonEmitByDateCache.get(monthVal);
-      this.logger.log(`Cached value found for ${monthVal}, value from cache: ${cachedValue}`);
+      this.logger.debug(`Cached value found for ${monthVal}, value from cache: ${cachedValue}`);
       return Promise.resolve({ carbonEmit: cachedValue });
     } else {
 
